@@ -3,6 +3,7 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DeviceManager;
@@ -39,15 +40,18 @@ public class HardwareK9bot
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public Servo    arm         = null;
-    public Servo    claw        = null;
+    public CRServo  claw        = null;
     public CRServo  continuous  = null;
     public TouchSensor touch    = null;
     public IrSeekerSensor seeker = null;
     public ColorSensor color     = null;
     public OpticalDistanceSensor ods = null;
+    public GyroSensor gyro = null;
+    public boolean gyroInit = false;
 
-    public final static double ARM_HOME = 0.2;
-    public final static double CLAW_HOME = 0.2;
+
+    public final static double ARM_HOME = 0.0;
+    public final static double CLAW_HOME = 0.0;
     public final static double ARM_MIN_RANGE  = 0.20;
     public final static double ARM_MAX_RANGE  = 0.90;
     public final static double CLAW_MIN_RANGE  = 0.20;
@@ -81,31 +85,37 @@ public class HardwareK9bot
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        //leftMotor.setPower(0);
+        //rightMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
 
         // Define and initialize ALL installed servos.
         arm = hwMap.servo.get("arm");
-        claw = hwMap.servo.get("claw");
+        claw = hwMap.crservo.get("claw");
 
         //Initialize the servos May be redundant.
         arm.scaleRange(ARM_MIN_RANGE, ARM_MAX_RANGE);
-        claw.scaleRange(CLAW_MIN_RANGE, CLAW_MAX_RANGE);
         arm.setDirection(Servo.Direction.FORWARD);
-        claw.setDirection(Servo.Direction.FORWARD);
         arm.setPosition(ARM_HOME);
-        claw.setPosition(CLAW_HOME);
+
+        claw.setDirection(CRServo.Direction.FORWARD);
+        claw.setPower(0);//Full Stop
+
 
 
         //continuous = hwMap.servo.get("continuous");
         continuous = hwMap.crservo.get("continuous");
         continuous.setDirection(CRServo.Direction.FORWARD);
-        continuous.setPower(128);  //Full Stop
+        continuous.setPower(0);//Full Stop
 
 
         // Touch Sensor
@@ -126,17 +136,30 @@ public class HardwareK9bot
 
 
 
+        //Playing around with gyro sensor
+        gyro = hwMap.gyroSensor.get("gyro");
+        if(gyroInit == false) {
+            gyro.calibrate();
+            while (gyro.isCalibrating()  == true) {
+                // need to add break out
+            }
+            gyroInit = true;
+        }
 
 
 
-        /* To see motors run:
-             - uncomment these lines
-             - update controller program
-             - connect to test bench
-             -use configuration "test sam b"
-          */
+
+        // To see motors run:
+        //     - uncomment these lines
+        //     - update controller program
+        //     - connect to test bench
+        //     -use configuration "test sam b"
+
         //leftMotor.setPower(0.5);
         //rightMotor.setPower(0.5);
+
+
+
     }
 
     /***

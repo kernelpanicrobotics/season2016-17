@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.I2cController;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
@@ -69,8 +70,10 @@ public class k9_linear_copy extends LinearOpMode {
     double          armPosition     = robot.ARM_HOME;                   // Servo safe position
     double          clawPosition    = robot.CLAW_HOME;                  // Servo safe position
     double          continuous      = 0.00;
-    final double    CLAW_SPEED      = 0.01 ;                            // sets rate to move servo
-    final double    ARM_SPEED       = 0.01 ;                            // sets rate to move servo
+    final double    CLAW_SPEED      = 0.00;                            // sets rate to move servo
+    final double    ARM_SPEED       = 0.00 ;                            // sets rate to move servo
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -112,10 +115,10 @@ public class k9_linear_copy extends LinearOpMode {
                 clawPosition -= CLAW_SPEED;
 
             //Use A & B on Gamepad 2 to move continuous
-            if (gamepad2.a)
-                continuous ++;
-            else if (gamepad2.b)
-                continuous --;
+            if (gamepad2.x)
+                robot.color.enableLed(true);
+            else if (gamepad2.y)
+                robot.color.enableLed(false);
 
             if (continuous > 256)
                 continuous = 256;
@@ -127,8 +130,7 @@ public class k9_linear_copy extends LinearOpMode {
             // Move both servos to new position.
             armPosition  = Range.clip(armPosition, robot.ARM_MIN_RANGE, robot.ARM_MAX_RANGE);
             robot.arm.setPosition(armPosition);
-            clawPosition = Range.clip(clawPosition, robot.CLAW_MIN_RANGE, robot.CLAW_MAX_RANGE);
-            robot.claw.setPosition(clawPosition);
+            robot.claw.setPower(clawPosition);
 
 
 
@@ -162,6 +164,10 @@ public class k9_linear_copy extends LinearOpMode {
             }
 
 
+            // Try to insert test code to calibrate optical sensor  see file CalibrateColorSensor
+
+
+
 
 
             //Test code for touch Sensor, have it spin sail (CRServo) servo
@@ -176,6 +182,10 @@ public class k9_linear_copy extends LinearOpMode {
             telemetry.addData("cont",  "%.2f", continuous);
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
+            telemetry.addData("heading", "%d", robot.gyro.getHeading());
+            telemetry.addData("rawX", "%d", robot.gyro.rawX());
+            telemetry.addData("rawY", "%d", robot.gyro.rawY());
+            telemetry.addData("rawZ", "%d", robot.gyro.rawZ());
             telemetry.addData("left  encoder ", "%d", robot.leftMotor.getCurrentPosition());
             telemetry.addData("right encoder ", "%d", robot.rightMotor.getCurrentPosition());
             telemetry.addData("arm port   ",  "%d", robot.arm.getPortNumber());
@@ -195,9 +205,14 @@ public class k9_linear_copy extends LinearOpMode {
             telemetry.update();
 
 
+
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
             robot.waitForTick(40);
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
+
+
+
+
 }
