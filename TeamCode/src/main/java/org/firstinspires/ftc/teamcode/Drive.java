@@ -187,6 +187,7 @@ public class Drive {
                         // Add time based check to keep loop from getting stuck
                     }
                 }
+
                 driveMove(0,0);
 
             }
@@ -200,6 +201,12 @@ public class Drive {
                     }
                     driveMove(0,LEFT_SIGN*SLOW_POWER);
                     while((driveGyro.getHeading() > 0) && myMode.opModeIsActive()) {
+                        // Add time based check to keep loop from getting stuck
+                    }
+                }
+                else {
+                    driveMove(0,LEFT_SIGN*SLOW_POWER);
+                    while((driveGyro.getHeading() < 10) && myMode.opModeIsActive()) {
                         // Add time based check to keep loop from getting stuck
                     }
                 }

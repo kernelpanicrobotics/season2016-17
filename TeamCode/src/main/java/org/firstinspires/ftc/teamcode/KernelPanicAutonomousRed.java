@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
  */
 @Autonomous(name="Kernel Panic Autonomous Red", group="Kernel Panic")
 public class KernelPanicAutonomousRed extends LinearOpMode {
-    //Juden Ki Launching Robot
     KernelPanicPlatform robot = new KernelPanicPlatform();
 
     @Override
@@ -30,155 +29,133 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
 
 
         //Clean this up because of drive class
-        DcMotor[] leftMotors = new DcMotor[]{ robot.leftMotorFront, robot.leftMotorBack };
-        DcMotor[] rightMotors = new DcMotor[]{ robot.rightMotorFront, robot.rightMotorBack};
+        DcMotor[] leftMotors = new DcMotor[]{robot.leftMotorFront, robot.leftMotorBack};
+        DcMotor[] rightMotors = new DcMotor[]{robot.rightMotorFront, robot.rightMotorBack};
         Drive myDrive = new Drive(leftMotors, rightMotors);
-        myDrive.setParams(12.5, 2, 79.5, .3, .2, .12, 1, -1, robot.gyro, this);
+        myDrive.setParams(12.5, 2, 79.5, .18, .15, .12, 1, -1, robot.gyro, this);
         waitForStart();
 
+        opModeIsActive();
+
         // Move forward some
-        myDrive.moveForward(-12, 0.3);
-        while (myDrive.motorsRunning() == true) {
+        myDrive.moveForward(12, -0.3);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
-        }
 
-        //Try to turn 45 degrees
-        currentHeading = robot.gyro.getHeading();
-        nextHeading = newHeading(currentHeading, -42);
-        myDrive.driveMove(0, -0.25);
-        while(robot.gyro.getHeading() <= nextHeading) {
-            //Kill some time
-
-
-
-            //telemetry.addData("heading", robot.gyro.getHeading());
-            //telemetry.update();
         }
         myDrive.allStop();
 
-        myDrive.moveForward(-47, 0.3);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
+        //Try to turn to 307 degrees
 
-        currentHeading = robot.gyro.getHeading();
-        nextHeading = newHeading(currentHeading, 42);
-        myDrive.driveMove(0, 0.25);
-        while(robot.gyro.getHeading() >= nextHeading) {
-            //Kill some time
-            //telemetry.addData("heading", robot.gyro.getHeading());
-            //telemetry.update();
+
+        //myDrive.gyroTurn(307, myDrive.RIGHT_TURN);
+        myDrive.gyroTurn(307, myDrive.LEFT_TURN);
+        myDrive.allStop();
+
+
+
+        myDrive.moveForward(42, -0.3);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
+            myDrive.update();
         }
         myDrive.allStop();
 
-       /* myDrive.moveForward(30, 0.1);
-        while ((myDrive.motorsRunning() == true)&&
-                (continueForward == true)){
-            myDrive.update();
+
+        myDrive.gyroTurn(3, myDrive.RIGHT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
+        // May be a function of battery power
+        myDrive.allStop();
 
 
-        }*/
         long mytime = System.currentTimeMillis();
         long loopingtime = 0;
-        myDrive.driveMove(-0.1,0);
+        myDrive.driveMove(-.1, 0);
         boolean keepmoving = true;
-        while (keepmoving == true) {
+        while ((keepmoving == true) && opModeIsActive()) {
             if (((robot.colorBottom.red() > 20) &&
                     (robot.colorBottom.blue() > 20) &&
                     (robot.colorBottom.green() > 20)) ||
-                    (loopingtime > 5000)){
+                    (loopingtime > 5000)) {
                 myDrive.allStop();
                 keepmoving = false;
             }
             loopingtime = System.currentTimeMillis() - mytime;
-
         }
+        myDrive.allStop();
 
-        myDrive.moveForward(-4, 0.1);
-        while (myDrive.motorsRunning() == true) {
+        myDrive.moveForward(4, 0.1);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
         }
+        myDrive.allStop();
 
 
-        //Red Autonomous
-        if(robot.colorSide.red() > 1) {
-            robot.frontServo.setPosition(10);
+        //Red Autonomous  -- servo positions are probably swapped
+        //dataDump();
+        //SystemClock.sleep(3000); //Give time to look at data
+        if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
+            robot.backServo.setPosition(robot.SERVO_MAX_RANGE_BACK);
+        } else {
+            robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
         }
-        else{
-            robot.backServo.setPosition(10);
-        }
-        telemetry.addData("Side      Red   ", "%d", robot.colorSide.red());
-        telemetry.addData("Side      Green ", "%d", robot.colorSide.green());
-        telemetry.addData("Side      Blue  ", "%d", robot.colorSide.blue());
         mytime = System.currentTimeMillis();
-        while(System.currentTimeMillis() - mytime < 1000);
-        robot.frontServo.setPosition(0);
-        robot.backServo.setPosition(0);
+        while ((System.currentTimeMillis() - mytime < 1000) && opModeIsActive()) ;
+        robot.frontServo.setPosition(robot.SERVO_MIN_RANGE_FRONT);
+        robot.backServo.setPosition(robot.SERVO_MIN_RANGE_BACK);
 
         mytime = System.currentTimeMillis();
         loopingtime = 0;
-        myDrive.driveMove(-0.1,0);
+        myDrive.driveMove(-.1, 0);
         keepmoving = true;
-        while (keepmoving == true) {
+        while ((keepmoving == true) && opModeIsActive()) {
             if (((robot.colorBottom.red() > 20) &&
                     (robot.colorBottom.blue() > 20) &&
                     (robot.colorBottom.green() > 20)) ||
-                    (loopingtime > 5000)){
+                    (loopingtime > 5000)) {
                 myDrive.allStop();
                 keepmoving = false;
             }
             loopingtime = System.currentTimeMillis() - mytime;
-
         }
+        myDrive.allStop();
 
-        myDrive.moveForward(-4, 0.1);
-        while (myDrive.motorsRunning() == true) {
+        myDrive.moveForward(4, 0.1);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
         }
+        myDrive.allStop();
 
         //Red Autonomous
-        if(robot.colorSide.red() > 1) {
-            robot.frontServo.setPosition(10);
+        //dataDump();
+        //SystemClock.sleep(3000); //Give time to look at data
+        if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
+            robot.backServo.setPosition(robot.SERVO_MAX_RANGE_BACK);
+        } else {
+            robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
         }
-        else{
-            robot.backServo.setPosition(10);
-        }
-        telemetry.addData("Side      Red   ", "%d", robot.colorSide.red());
-        telemetry.addData("Side      Green ", "%d", robot.colorSide.green());
-        telemetry.addData("Side      Blue  ", "%d", robot.colorSide.blue());
+        ;
         mytime = System.currentTimeMillis();
-        while(System.currentTimeMillis() - mytime < 1000);
-        robot.frontServo.setPosition(0);
-        robot.backServo.setPosition(0);
+        while ((System.currentTimeMillis() - mytime < 1000)  && opModeIsActive()) ;
+        robot.frontServo.setPosition(robot.SERVO_MIN_RANGE_FRONT);
+        robot.backServo.setPosition(robot.SERVO_MIN_RANGE_BACK);
 
-        currentHeading = robot.gyro.getHeading();
-        nextHeading = newHeading(currentHeading, 135);
-        myDrive.driveMove(0, 0.25);
-        while((robot.gyro.getHeading()  != nextHeading) ||
-                (robot.gyro.getHeading() != nextHeading+1) ||
-                (robot.gyro.getHeading() != nextHeading+2) ||
-                (robot.gyro.getHeading() != nextHeading-1) ||
-                (robot.gyro.getHeading() != nextHeading-2))
-        {
-            //Kill some time
-            //telemetry.addData("heading", robot.gyro.getHeading());
-            //telemetry.addData("next heading", nextHeading);
-            //telemetry.update();
-        }
-        while(robot.gyro.getHeading() >= nextHeading){
+        //Turn towards center and drive to knock off ball
+        dataDump();
+        SystemClock.sleep(3000); //Give time to look at data
 
+        myDrive.gyroTurn(315, myDrive.LEFT_TURN);  //Left turn near zero has a problem
+        myDrive.allStop();
+        myDrive.moveForward(66, 0.3);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
+            myDrive.update();
         }
         myDrive.allStop();
 
 
-        myDrive.moveForward(-66, 0.3);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
+
 
         while(opModeIsActive()) {
             idle();
-        }
+        }   // New opModeActive()
 
         myDrive.allStop();
 
@@ -200,5 +177,13 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
 
     }
 
+    public void dataDump() {
+        telemetry.addData("heading", robot.gyro.getHeading());
+        telemetry.addData("Side      Red   ", "%d", robot.colorSide.red());
+        telemetry.addData("Side      Green ", "%d", robot.colorSide.green());
+        telemetry.addData("Side      Blue  ", "%d", robot.colorSide.blue());
+        telemetry.addData("heading", robot.gyro.getHeading());
+        telemetry.update();
+    }
 
 }
