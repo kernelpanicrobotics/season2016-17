@@ -11,6 +11,22 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 
 /**
  * Created by Kernel Panic on 11/26/16.
+ *
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCHDO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ * DO NOT TOUCH
+ *
+ * Code is as good as it is going to get for first competition.   Leave it alone!!!!!
+ * This means you!!!
+ *
  */
 @Autonomous(name="Kernel Panic Autonomous Blue", group="Kernel Panic")
 public class KernelPanicAutonomousBlue extends LinearOpMode {
@@ -33,7 +49,7 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
         DcMotor[] leftMotors = new DcMotor[]{robot.leftMotorFront, robot.leftMotorBack};
         DcMotor[] rightMotors = new DcMotor[]{robot.rightMotorFront, robot.rightMotorBack};
         Drive myDrive = new Drive(leftMotors, rightMotors);
-        myDrive.setParams(12.5, 2, 79.5, .2, .15, .12, 1, -1, robot.gyro, this);
+        myDrive.setParams(12.5, 2, 79.5, .18, .15, .12, 1, -1, robot.gyro, this);
         waitForStart();
 
         opModeIsActive();
@@ -52,14 +68,14 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             myDrive.allStop();
 
 
-            myDrive.moveForward(41, 0.3);
+            myDrive.moveForward(40, 0.3);
             while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
                 myDrive.update();
             }
             myDrive.allStop();
 
 
-            myDrive.gyroTurn(2, myDrive.LEFT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
+            myDrive.gyroTurn(1, myDrive.LEFT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
                                                     // May be a function of battery power
             myDrive.allStop();
 
@@ -88,8 +104,8 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
 
 
             //Red Autonomous  -- servo positions are probably swapped
-            dataDump();
-            SystemClock.sleep(3000); //Give time to look at data
+            //dataDump();
+            //SystemClock.sleep(3000); //Give time to look at data
             if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
                 robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
             } else {
@@ -123,8 +139,8 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             myDrive.allStop();
 
             //Red Autonomous
-            dataDump();
-            SystemClock.sleep(3000); //Give time to look at data
+            //dataDump();
+            //SystemClock.sleep(3000); //Give time to look at data
         if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
                 robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
             } else {
@@ -137,7 +153,10 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             robot.backServo.setPosition(robot.SERVO_MIN_RANGE_BACK);
 
             //Turn towards center and drive to knock off ball
-            myDrive.gyroTurn(225, myDrive.LEFT_TURN);
+            dataDump();
+            SystemClock.sleep(3000); //Give time to look at data
+
+            myDrive.gyroTurn(220, myDrive.RIGHT_TURN);  //Left turn near zero has a problem
             myDrive.allStop();
             myDrive.moveForward(66, 0.3);
             while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
@@ -177,6 +196,7 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
         telemetry.addData("Side      Red   ", "%d", robot.colorSide.red());
         telemetry.addData("Side      Green ", "%d", robot.colorSide.green());
         telemetry.addData("Side      Blue  ", "%d", robot.colorSide.blue());
+        telemetry.addData("heading", robot.gyro.getHeading());
         telemetry.update();
     }
 
