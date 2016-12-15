@@ -30,7 +30,6 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
  */
 @Autonomous(name="Kernel Panic Autonomous Blue", group="Kernel Panic")
 public class KernelPanicAutonomousBlue extends LinearOpMode {
-    //Juden Ki Launching Robot
     KernelPanicPlatform robot = new KernelPanicPlatform();
 
     @Override
