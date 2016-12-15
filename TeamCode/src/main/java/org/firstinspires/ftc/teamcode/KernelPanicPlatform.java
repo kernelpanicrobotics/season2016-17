@@ -39,9 +39,12 @@ public class KernelPanicPlatform {
     public Servo frontServo = null;
     public Servo backServo = null;
 
-    public final static double SERVO_HOME = 0.0;
-    public final static double SERVO_MIN_RANGE  = 0.20;
-    public final static double SERVO_MAX_RANGE  = 0.90;
+    public final static double SERVO_HOME_FRONT = 0.0;
+    public final static double SERVO_HOME_BACK = 0.0;
+    public final static double SERVO_MIN_RANGE_FRONT  = 0.00;
+    public final static double SERVO_MAX_RANGE_FRONT  = 1.0;
+    public final static double SERVO_MIN_RANGE_BACK  = 0.00;
+    public final static double SERVO_MAX_RANGE_BACK  = 1.0;
 
 
     public void init(HardwareMap ahwMap) {
@@ -84,12 +87,12 @@ public class KernelPanicPlatform {
         //Configure Servos
         frontServo = ahwMap.servo.get("frontServo");
         backServo = ahwMap.servo.get("backServo");
-        frontServo.scaleRange(SERVO_MIN_RANGE, SERVO_MAX_RANGE);
+        frontServo.scaleRange(SERVO_MIN_RANGE_FRONT, SERVO_MAX_RANGE_FRONT);
         frontServo.setDirection(Servo.Direction.FORWARD);
-        frontServo.setPosition(SERVO_HOME);
-        backServo.scaleRange(SERVO_MIN_RANGE, SERVO_MAX_RANGE);
+        frontServo.setPosition(SERVO_HOME_FRONT);
+        backServo.scaleRange(SERVO_MIN_RANGE_BACK, SERVO_MAX_RANGE_BACK);
         backServo.setDirection(Servo.Direction.FORWARD);
-        backServo.setPosition(SERVO_HOME);
+        backServo.setPosition(SERVO_HOME_BACK);
 
 
 

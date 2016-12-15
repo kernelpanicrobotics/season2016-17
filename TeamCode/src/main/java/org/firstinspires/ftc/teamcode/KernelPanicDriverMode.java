@@ -70,16 +70,16 @@ public class KernelPanicDriverMode extends LinearOpMode {
 
             // Actuate the servos.
             if (gamepad1.a) {
-                robot.frontServo.setPosition(robot.frontServo.getPosition()+10);
+                robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_BACK);
             }
             if (gamepad1.b) {
-                robot.frontServo.setPosition(robot.frontServo.getPosition()-10);
+                robot.frontServo.setPosition(robot.SERVO_MIN_RANGE_BACK);
             }
             if (gamepad1.x) {
-                robot.backServo.setPosition(robot.backServo.getPosition()+10);
+                robot.backServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
             }
             if (gamepad1.y) {
-                robot.backServo.setPosition(robot.backServo.getPosition()-10);
+                robot.backServo.setPosition(robot.SERVO_MIN_RANGE_FRONT);
             }
 
 

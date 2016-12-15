@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.SystemClock;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,80 +16,68 @@ public class SquareDriveTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+        telemetry.addData("heading", robot.gyro.getHeading());
+        telemetry.update();
+
         waitForStart();
         DcMotor[] leftMotors = new DcMotor[]{ robot.leftMotorFront, robot.leftMotorBack };
         DcMotor[] rightMotors = new DcMotor[]{ robot.rightMotorFront, robot.rightMotorBack};
         Drive myDrive = new Drive(leftMotors, rightMotors);
 
-        // Move 36 inches
-        myDrive.moveForward(24 , 0.8);
-        while (myDrive.motorsRunning() == true) {
+
+        myDrive.setParams(12.5, 2, 79.5, .2, .15, .12, 1, -1, robot.gyro, this);
+
+        // Move Forward
+        myDrive.moveForward(12, 0.6);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
         }
 
+        // Right turn with new > current  go from 0 to 90
+        myDrive.gyroTurn(90, myDrive.RIGHT_TURN);
+        myDrive.allStop();
+        //Heading should now be 90
+        telemetry.addData("heading", robot.gyro.getHeading());
+        telemetry.update();
+        SystemClock.sleep(1000);  // Take a short nap so telemetry can be checked
 
-        // Sleep 1 seconds
-        //SystemClock.sleep(1000);
 
-        // Turn 90 degrees
-        myDrive.turn(90, 0.4);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
 
-        // Sleep 3 seconds
-        //SystemClock.sleep(1000);
+        // Left turn with new < current  go from 90 to 45
+        myDrive.gyroTurn(45, myDrive.LEFT_TURN);
+        myDrive.allStop();
+        //Heading should now be 45
+        telemetry.addData("heading", robot.gyro.getHeading());
+        telemetry.update();
+        SystemClock.sleep(1000);
 
-        // Move 36 inches
-        myDrive.moveForward(24 , 0.8);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
 
-        // Sleep 1 second
-        //SystemClock.sleep(1000);
+        //Right turn with new < current   go from 45 to 0
+        myDrive.gyroTurn(0, myDrive.RIGHT_TURN);
+        myDrive.allStop();
+        //Heading should now be 0
+        telemetry.addData("heading", robot.gyro.getHeading());
+        telemetry.update();
+        SystemClock.sleep(1000);
 
-        // Turn 90 degrees
-        myDrive.turn(90, 0.4);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
+        //Reports correct heading but robot is off.   Try no calibrating gyro at start????  Not gyro
+        //calibration issue at start.  Move gyro from back upper right to center of platform.  Appears to just
+        //be a gyro thing.   Compensate by only taking short turns.
 
-        // Sleep 1 seconds
-        //SystemClock.sleep(1000);
 
-        // Move 36 inches
-        myDrive.moveForward(24 , 0.8);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
 
-        // Sleep 1 seconds
-        //SystemClock.sleep(1000);
+        // Left turn with new > current  Turn from 0 to 270
+        myDrive.gyroTurn(270, myDrive.LEFT_TURN);
+        myDrive.allStop();
+        //Heading should now be 270
+        telemetry.addData("heading", robot.gyro.getHeading());
+        telemetry.update();
+        SystemClock.sleep(1000);
 
-        // Turn 90 degrees
-        myDrive.turn(90, 0.4);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
 
-        // Sleep 1 seconds
-        //SystemClock.sleep(1000);
+        // Large gyro turns while passing through sero seem to cause some not nice behaviour.
+        //Avoid large turns through zero if possible.
 
-        // Move 36 inches
-        myDrive.moveForward(24 , 0.8);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
-
-        // Sleep 1 Second
-        //SystemClock.sleep(1000);
-
-        // Turn 90 degrees
-        myDrive.turn(90, 0.4);
-        while (myDrive.motorsRunning() == true) {
-            myDrive.update();
-        }
 
         while(opModeIsActive()) {
             idle();

@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Actuators and Sensors for Driver Control Mode
  */
 
-@TeleOp(name="juden Ki Driver Mode", group="Juden Ki")
+//@TeleOp(name="juden Ki Driver Mode", group="Juden Ki")
 public class JudenKiDriverMode extends LinearOpMode {
 
     public JudenKiPlatform robot = new JudenKiPlatform();

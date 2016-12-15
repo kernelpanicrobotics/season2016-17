@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by judenki on 11/26/16.
- */
+
 @Autonomous(name="Juden-Ki Autonomous", group="Juden-Ki")
 public class JudenKiAutonomous  extends LinearOpMode {
     //Juden Ki Launching Robot
@@ -63,4 +63,4 @@ public class JudenKiAutonomous  extends LinearOpMode {
 }
 
 
-
+*/
