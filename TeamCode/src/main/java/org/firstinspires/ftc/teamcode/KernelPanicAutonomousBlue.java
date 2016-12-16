@@ -4,6 +4,7 @@ import android.os.SystemClock;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
@@ -67,14 +68,14 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             myDrive.allStop();
 
 
-            myDrive.moveForward(40, 0.3);
+            myDrive.moveForward(44, 0.3);
             while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
                 myDrive.update();
             }
             myDrive.allStop();
 
 
-            myDrive.gyroTurn(1, myDrive.LEFT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
+            myDrive.gyroTurn(2, myDrive.LEFT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
                                                     // May be a function of battery power
             myDrive.allStop();
 
@@ -104,16 +105,33 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
 
             //Red Autonomous  -- servo positions are probably swapped
             //dataDump();
-            //SystemClock.sleep(3000); //Give time to look at data
-            if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
-                robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
-            } else {
-                robot.backServo.setPosition(robot.SERVO_MAX_RANGE_BACK);
+            //SystemClock.sleep(1000); //Give time to look at data
+            if (robot.colorSide.red() > robot.colorSide.blue()) {
+                robot.backServo.setDirection(CRServo.Direction.FORWARD);
+                robot.backServo.setPower(robot.SERVO_EXTEND_POWER);
+                safeSleep(2000);
+                robot.backServo.setDirection(CRServo.Direction.REVERSE);
+                robot.backServo.setPower(robot.SERVO_RETRACT_POWER);
+                safeSleep(2000);
+                robot.backServo.setPower(robot.SERVO_STOP_POWER);
+            } else if (robot.colorSide.blue() > robot.colorSide.red()){
+                robot.frontServo.setDirection(CRServo.Direction.FORWARD);
+                robot.frontServo.setPower(robot.SERVO_EXTEND_POWER);
+                safeSleep(2000);
+                robot.frontServo.setDirection(CRServo.Direction.REVERSE);
+                robot.frontServo.setPower(robot.SERVO_RETRACT_POWER);
+                safeSleep(2000);
+                robot.frontServo.setPower(robot.SERVO_STOP_POWER);
             }
-            mytime = System.currentTimeMillis();
-            while ((System.currentTimeMillis() - mytime < 1000) && opModeIsActive()) ;
-            robot.frontServo.setPosition(robot.SERVO_MIN_RANGE_FRONT);
-            robot.backServo.setPosition(robot.SERVO_MIN_RANGE_BACK);
+            else{
+                //Do nothing
+            }
+
+            robot.frontServo.setPower(robot.SERVO_STOP_POWER);
+            robot.backServo.setPower(robot.SERVO_STOP_POWER);
+        //    mytime = System.currentTimeMillis();
+        //    while ((System.currentTimeMillis() - mytime < 1000) && opModeIsActive()) ;
+
 
             mytime = System.currentTimeMillis();
             loopingtime = 0;
@@ -137,23 +155,40 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             }
             myDrive.allStop();
 
-            //Red Autonomous
+            //Blue Autonomous
             //dataDump();
-            //SystemClock.sleep(3000); //Give time to look at data
-        if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
-                robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
-            } else {
-                robot.backServo.setPosition(robot.SERVO_MAX_RANGE_BACK);
+            //SystemClock.sleep(1000); //Give time to look at data
+            if (robot.colorSide.red() > robot.colorSide.blue()) {
+                robot.backServo.setDirection(CRServo.Direction.FORWARD);
+                robot.backServo.setPower(robot.SERVO_EXTEND_POWER);
+                safeSleep(2000);
+                robot.backServo.setDirection(CRServo.Direction.REVERSE);
+                robot.backServo.setPower(robot.SERVO_RETRACT_POWER);
+                safeSleep(2000);
+                robot.backServo.setPower(robot.SERVO_STOP_POWER);
+            } else if (robot.colorSide.blue() > robot.colorSide.red()){
+                robot.frontServo.setDirection(CRServo.Direction.FORWARD);
+                robot.frontServo.setPower(robot.SERVO_EXTEND_POWER);
+                safeSleep(2000);
+                robot.frontServo.setDirection(CRServo.Direction.REVERSE);
+                robot.frontServo.setPower(robot.SERVO_RETRACT_POWER);
+                safeSleep(2000);
+                robot.frontServo.setPower(robot.SERVO_STOP_POWER);
             }
-            ;
-            mytime = System.currentTimeMillis();
-            while ((System.currentTimeMillis() - mytime < 1000)  && opModeIsActive()) ;
-            robot.frontServo.setPosition(robot.SERVO_MIN_RANGE_FRONT);
-            robot.backServo.setPosition(robot.SERVO_MIN_RANGE_BACK);
+            else{
+                //Do nothing
+            }
+
+            robot.frontServo.setPower(robot.SERVO_STOP_POWER);
+            robot.backServo.setPower(robot.SERVO_STOP_POWER);
+
+            //mytime = System.currentTimeMillis();
+            //while ((System.currentTimeMillis() - mytime < 1000)  && opModeIsActive()) ;
+
 
             //Turn towards center and drive to knock off ball
-            dataDump();
-            SystemClock.sleep(3000); //Give time to look at data
+            //dataDump();
+            //SystemClock.sleep(3000); //Give time to look at data
 
             myDrive.gyroTurn(220, myDrive.RIGHT_TURN);  //Left turn near zero has a problem
             myDrive.allStop();
@@ -171,6 +206,8 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
         }   // New opModeActive()
 
         myDrive.allStop();
+        robot.frontServo.setPower(robot.SERVO_STOP_POWER);
+        robot.backServo.setPower(robot.SERVO_STOP_POWER);
 
     }
 
@@ -197,6 +234,14 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
         telemetry.addData("Side      Blue  ", "%d", robot.colorSide.blue());
         telemetry.addData("heading", robot.gyro.getHeading());
         telemetry.update();
+    }
+
+    public void safeSleep (long duration) {
+        long currentTime = System.currentTimeMillis();
+        while ((System.currentTimeMillis() - duration < currentTime) && opModeIsActive()) {
+            //kill some time
+            // idle();
+        }
     }
 
 

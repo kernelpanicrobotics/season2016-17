@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.SystemClock;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -36,15 +40,16 @@ public class KernelPanicPlatform {
     public ColorSensor colorSide = null;
     public I2cDevice range = null;
     public I2cDeviceSynch rangeReader = null;
-    public Servo frontServo = null;
-    public Servo backServo = null;
+    //public Servo frontServo = null;
+    //public Servo backServo = null;
+    public CRServo frontServo = null;
+    public CRServo backServo  = null;
 
-    public final static double SERVO_HOME_FRONT = 0.0;
-    public final static double SERVO_HOME_BACK = 0.0;
-    public final static double SERVO_MIN_RANGE_FRONT  = 0.00;
-    public final static double SERVO_MAX_RANGE_FRONT  = 1.0;
-    public final static double SERVO_MIN_RANGE_BACK  = 0.00;
-    public final static double SERVO_MAX_RANGE_BACK  = 1.0;
+
+
+    public final static double SERVO_EXTEND_POWER  = 254;
+    public final static double SERVO_RETRACT_POWER = 254;
+    public final static double SERVO_STOP_POWER = 0.00;
 
 
     public void init(HardwareMap ahwMap) {
@@ -64,6 +69,7 @@ public class KernelPanicPlatform {
         //Gyro Sensor
         gyro = ahwMap.gyroSensor.get("gyro");
         gyro.calibrate();
+        SystemClock.sleep(50);  // Give a breif moment so the init can start
         while (gyro.isCalibrating()  == true) {
             // need to add break out
         }
@@ -84,22 +90,29 @@ public class KernelPanicPlatform {
         //Make method and wrapper class for all of this
 */
 
-        //Configure Servos
-        frontServo = ahwMap.servo.get("frontServo");
-        backServo = ahwMap.servo.get("backServo");
-        frontServo.scaleRange(SERVO_MIN_RANGE_FRONT, SERVO_MAX_RANGE_FRONT);
-        frontServo.setDirection(Servo.Direction.FORWARD);
-        frontServo.setPosition(SERVO_HOME_FRONT);
-        backServo.scaleRange(SERVO_MIN_RANGE_BACK, SERVO_MAX_RANGE_BACK);
-        backServo.setDirection(Servo.Direction.FORWARD);
-        backServo.setPosition(SERVO_HOME_BACK);
+        //Configure Servos  tweak them in and out to confirm operation
+        frontServo = ahwMap.crservo.get("frontServo");
+        backServo = ahwMap.crservo.get("backServo");
 
-
-
-
+        frontServo.setDirection(CRServo.Direction.FORWARD);
+        backServo.setDirection(CRServo.Direction.FORWARD);
+        frontServo.setPower(SERVO_EXTEND_POWER);
+        backServo.setPower(SERVO_EXTEND_POWER);
+        SystemClock.sleep(500);
+        frontServo.setPower(SERVO_STOP_POWER);
+        backServo.setPower(SERVO_STOP_POWER);
+        frontServo.setDirection(CRServo.Direction.REVERSE);
+        backServo.setDirection(CRServo.Direction.REVERSE);
+        frontServo.setPower(SERVO_RETRACT_POWER);
+        backServo.setPower(SERVO_RETRACT_POWER);
+        SystemClock.sleep(500);
+        frontServo.setPower(SERVO_STOP_POWER);
+        backServo.setPower(SERVO_STOP_POWER);
 
 
 
 
     }
+
+
 }

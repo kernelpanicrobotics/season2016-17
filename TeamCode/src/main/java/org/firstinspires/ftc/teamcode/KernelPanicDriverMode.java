@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -70,17 +72,31 @@ public class KernelPanicDriverMode extends LinearOpMode {
 
             // Actuate the servos.
             if (gamepad1.a) {
-                robot.frontServo.setPosition(robot.SERVO_MAX_RANGE_BACK);
+                robot.frontServo.setDirection(CRServo.Direction.FORWARD);
+                robot.frontServo.setPower(robot.SERVO_EXTEND_POWER);
             }
-            if (gamepad1.b) {
-                robot.frontServo.setPosition(robot.SERVO_MIN_RANGE_BACK);
+            else if (gamepad1.b) {
+                robot.frontServo.setDirection(CRServo.Direction.REVERSE);
+                robot.frontServo.setPower(robot.SERVO_RETRACT_POWER);
             }
+            else
+                robot.frontServo.setPower(robot.SERVO_STOP_POWER);
+
+
             if (gamepad1.x) {
-                robot.backServo.setPosition(robot.SERVO_MAX_RANGE_FRONT);
+                robot.backServo.setDirection(CRServo.Direction.FORWARD);
+                robot.backServo.setPower(robot.SERVO_EXTEND_POWER);
             }
-            if (gamepad1.y) {
-                robot.backServo.setPosition(robot.SERVO_MIN_RANGE_FRONT);
+            else if (gamepad1.y) {
+                robot.backServo.setDirection(CRServo.Direction.REVERSE);
+                robot.backServo.setPower(robot.SERVO_RETRACT_POWER);
             }
+            else
+                robot.backServo.setPower(robot.SERVO_STOP_POWER);
+
+
+
+
 
 
 
@@ -107,7 +123,7 @@ public class KernelPanicDriverMode extends LinearOpMode {
 
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-            waitForTick(40);
+            //waitForTick(40);
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
