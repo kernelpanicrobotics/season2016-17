@@ -62,7 +62,7 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
         myDrive.allStop();
 
 
-        myDrive.gyroTurn(3, myDrive.RIGHT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
+        myDrive.gyroTurn(2, myDrive.RIGHT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
         // May be a function of battery power
         myDrive.allStop();
 
@@ -83,7 +83,7 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
         }
         myDrive.allStop();
 
-        myDrive.moveForward(4, 0.1);
+        myDrive.moveForward(11, 0.1);
         while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
         }
@@ -91,25 +91,27 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
 
 
         //Red Autonomous  -- servo positions are probably swapped
-        dataDump();
-        SystemClock.sleep(1000); //Give time to look at data
-        if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
+        //dataDump();
+        //SystemClock.sleep(1000); //Give time to look at data
+        if (robot.colorSide.red() > robot.colorSide.blue()) {
             robot.frontServo.setDirection(CRServo.Direction.FORWARD);
             robot.frontServo.setPower(robot.SERVO_EXTEND_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.frontServo.setDirection(CRServo.Direction.REVERSE);
             robot.frontServo.setPower(robot.SERVO_RETRACT_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.frontServo.setPower(robot.SERVO_STOP_POWER);
-        }
-        else {
+        } else if (robot.colorSide.blue() > robot.colorSide.red()){
             robot.backServo.setDirection(CRServo.Direction.FORWARD);
             robot.backServo.setPower(robot.SERVO_EXTEND_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.backServo.setDirection(CRServo.Direction.REVERSE);
             robot.backServo.setPower(robot.SERVO_RETRACT_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.backServo.setPower(robot.SERVO_STOP_POWER);
+        }
+        else{
+            //Do nothing
         }
 
         robot.frontServo.setPower(robot.SERVO_STOP_POWER);
@@ -118,6 +120,7 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
         mytime = System.currentTimeMillis();
         loopingtime = 0;
         myDrive.driveMove(-.1, 0);
+        safeSleep(1000);  //Get past first white line
         keepmoving = true;
         while ((keepmoving == true) && opModeIsActive()) {
             if (((robot.colorBottom.red() > 20) &&
@@ -131,32 +134,34 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
         }
         myDrive.allStop();
 
-        myDrive.moveForward(4, 0.1);
+        myDrive.moveForward(11, 0.1);
         while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
         }
         myDrive.allStop();
 
         //Red Autonomous
-        dataDump();
-        SystemClock.sleep(1000); //Give time to look at data
-        if ((robot.colorSide.red() > 1) && (robot.colorSide.red() > robot.colorSide.blue())) {
+        //dataDump();
+        //SystemClock.sleep(1000); //Give time to look at data
+        if (robot.colorSide.red() > robot.colorSide.blue()) {
             robot.frontServo.setDirection(CRServo.Direction.FORWARD);
             robot.frontServo.setPower(robot.SERVO_EXTEND_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.frontServo.setDirection(CRServo.Direction.REVERSE);
             robot.frontServo.setPower(robot.SERVO_RETRACT_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.frontServo.setPower(robot.SERVO_STOP_POWER);
-        }
-        else {
+        } else if (robot.colorSide.blue() > robot.colorSide.red()){
             robot.backServo.setDirection(CRServo.Direction.FORWARD);
             robot.backServo.setPower(robot.SERVO_EXTEND_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.backServo.setDirection(CRServo.Direction.REVERSE);
             robot.backServo.setPower(robot.SERVO_RETRACT_POWER);
-            safeSleep(2700);
+            safeSleep(2000);
             robot.backServo.setPower(robot.SERVO_STOP_POWER);
+        }
+        else{
+            //Do nothing
         }
 
         robot.frontServo.setPower(robot.SERVO_STOP_POWER);
@@ -166,8 +171,19 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
         //dataDump();
         //SystemClock.sleep(3000); //Give time to look at data
 
+        if (robot.gyro.getHeading() >315) {
+            //  Do nothing
+        }
+        else {
+            myDrive.driveMove(0,-.2);
+            safeSleep(200);
+            myDrive.allStop();
+        }
+
         myDrive.gyroTurn(315, myDrive.LEFT_TURN);  //Left turn near zero has a problem
         myDrive.allStop();
+
+
         myDrive.moveForward(66, 0.3);
         while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
