@@ -109,18 +109,18 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             if (robot.colorSide.red() > robot.colorSide.blue()) {
                 robot.backServo.setDirection(CRServo.Direction.FORWARD);
                 robot.backServo.setPower(robot.SERVO_EXTEND_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.backServo.setDirection(CRServo.Direction.REVERSE);
                 robot.backServo.setPower(robot.SERVO_RETRACT_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.backServo.setPower(robot.SERVO_STOP_POWER);
             } else if (robot.colorSide.blue() > robot.colorSide.red()){
                 robot.frontServo.setDirection(CRServo.Direction.FORWARD);
                 robot.frontServo.setPower(robot.SERVO_EXTEND_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.frontServo.setDirection(CRServo.Direction.REVERSE);
                 robot.frontServo.setPower(robot.SERVO_RETRACT_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.frontServo.setPower(robot.SERVO_STOP_POWER);
             }
             else{
@@ -161,18 +161,18 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             if (robot.colorSide.red() > robot.colorSide.blue()) {
                 robot.backServo.setDirection(CRServo.Direction.FORWARD);
                 robot.backServo.setPower(robot.SERVO_EXTEND_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.backServo.setDirection(CRServo.Direction.REVERSE);
                 robot.backServo.setPower(robot.SERVO_RETRACT_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.backServo.setPower(robot.SERVO_STOP_POWER);
             } else if (robot.colorSide.blue() > robot.colorSide.red()){
                 robot.frontServo.setDirection(CRServo.Direction.FORWARD);
                 robot.frontServo.setPower(robot.SERVO_EXTEND_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.frontServo.setDirection(CRServo.Direction.REVERSE);
                 robot.frontServo.setPower(robot.SERVO_RETRACT_POWER);
-                safeSleep(2000);
+                safeSleep(2500);
                 robot.frontServo.setPower(robot.SERVO_STOP_POWER);
             }
             else{
