@@ -21,7 +21,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  */
 
 public class Drive {
-
+    public static int prevHeading = 176;
+    public static int newHeading = 178;
     private DcMotor[] leftMotors   = null;
     private DcMotor[] rightMotors  = null;
 
@@ -162,6 +163,39 @@ public class Drive {
      *  Accept the new absolute heading and direction of turn.   Initialization routine must be called
      *  first to set parameters fastPower, slowPower, correctionPower, rightSign, leftSign.
      */
+    public void gyroTurn2(int newHeading, int clockwise){
+        int currHeading = driveGyro.getHeading();
+        int accumTurn = 0;
+        int cw = (clockwise < 0) ? -1 : 1;
+        int transit = (((currHeading > newHeading) && (cw > 0)) ||
+                       ((currHeading < newHeading) && (cw < 0))) ?  360 : 0;
+        int desiredRotation = Math.abs(transit + (cw*newHeading) + ((-1*cw)*currHeading));
+        desiredRotation = (desiredRotation > 360) ? desiredRotation - 360 : desiredRotation;
+        prevHeading = currHeading;
+
+        while((accumTurn < desiredRotation) &&
+              (clockwise != 0) &&
+              (myMode.opModeIsActive())){
+            double turnDir = (clockwise > 0) ? RIGHT_SIGN : LEFT_SIGN;
+            double powerLevel = ((desiredRotation - accumTurn) > 10) ? FAST_POWER : SLOW_POWER;
+            driveMove(0, turnDir * powerLevel);
+            //numberSteps[leg]++;
+            currHeading = driveGyro.getHeading();
+            if (Math.abs(prevHeading - currHeading) > 350) {
+                if (prevHeading < currHeading) {
+                    accumTurn += prevHeading + 360 - currHeading;
+                }
+                else {
+                    accumTurn += currHeading + 360 - prevHeading;
+                }
+            }
+            else {
+                accumTurn += Math.abs(prevHeading - currHeading);
+            }
+            prevHeading = currHeading;
+        }
+        driveMove(0,0);
+    }
     public void gyroTurn(int newHeading, boolean direction) {
 
         /*
@@ -287,6 +321,19 @@ public class Drive {
 
         }
     }
+
+    /***********************************************************
+     **          calculate necessary turn amount              **
+     **********************************************************/
+    public static int getNeededTurn(int isNow, int want, int cw) {
+        cw = (cw < 0) ? -1 : 1;
+        int transit = (((isNow > want) && (cw > 0)) ||
+                ((isNow < want) && (cw < 0))) ?  360 : 0;
+        int neededTurn = Math.abs(transit + (cw*want) + ((-1*cw)*isNow));
+        neededTurn = (neededTurn > 360) ? neededTurn - 360 : neededTurn;
+        return (neededTurn);
+    }
+
 
 
     public void update() {

@@ -15,13 +15,20 @@ public class SquareDriveTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        int[] Headings = {
+                45, 315, 90, 80
+        };
+        int[] rotationDir = {
+                1, -1, 1, 1
+        };
+        int leg = 0;
         robot.init(hardwareMap);
         telemetry.addData("heading", robot.gyro.getHeading());
         telemetry.update();
 
         waitForStart();
         DcMotor[] leftMotors = new DcMotor[]{ robot.leftMotorFront, robot.leftMotorBack };
-        DcMotor[] rightMotors = new DcMotor[]{ robot.rightMotorFront, robot.rightMotorBack};
+        DcMotor[] rightMotors = new DcMotor[]{robot.rightMotorFront, robot.rightMotorBack};
         Drive myDrive = new Drive(leftMotors, rightMotors);
 
 
@@ -32,16 +39,16 @@ public class SquareDriveTest extends LinearOpMode {
         while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
             myDrive.update();
         }
-
+        for (leg = 0; leg <= 3; leg++) {
         // Right turn with new > current  go from 0 to 90
-        myDrive.gyroTurn(90, myDrive.RIGHT_TURN);
-        myDrive.allStop();
-        //Heading should now be 90
-        telemetry.addData("heading", robot.gyro.getHeading());
-        telemetry.update();
-        SystemClock.sleep(1000);  // Take a short nap so telemetry can be checked
-
-
+            myDrive.gyroTurn2(Headings[leg], rotationDir[leg]);
+            myDrive.allStop();
+            //Heading should now be 90
+            telemetry.addData("heading", robot.gyro.getHeading());
+            telemetry.update();
+            SystemClock.sleep(1000);  // Take a short nap so telemetry can be checked//
+        }
+/*
 
         // Left turn with new < current  go from 90 to 45
         myDrive.gyroTurn(45, myDrive.LEFT_TURN);
@@ -74,7 +81,7 @@ public class SquareDriveTest extends LinearOpMode {
         telemetry.update();
         SystemClock.sleep(1000);
 
-
+*/
         // Large gyro turns while passing through sero seem to cause some not nice behaviour.
         //Avoid large turns through zero if possible.
 

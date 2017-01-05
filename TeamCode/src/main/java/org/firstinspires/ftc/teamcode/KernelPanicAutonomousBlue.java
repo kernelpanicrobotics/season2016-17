@@ -35,6 +35,13 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        int[] Headings = {
+                53, 2, 220. 0
+        };
+        int[] rotationDir = {
+                1, -1, 1, 0
+        };
+        int leg = 0;
         int currentHeading;
         int nextHeading;
         //public static final int COLOR_SENSOR_BOTTOM_ADDRESS = 0x3c>>1;
@@ -55,29 +62,30 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
         opModeIsActive();
 
         // Move forward some
-            myDrive.moveForward(12, 0.3);
-            while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
-                myDrive.update();
-
-            }
-            myDrive.allStop();
+        myDrive.moveForward(12, 0.3);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
+            myDrive.update();
+        }
+        myDrive.allStop();
 
             //Try to turn 45 degrees
-
-            myDrive.gyroTurn(53, myDrive.RIGHT_TURN);
-            myDrive.allStop();
-
-
-            myDrive.moveForward(44, 0.3);
-            while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
-                myDrive.update();
-            }
-            myDrive.allStop();
+        myDrive.gyroTurn2(Headings[leg], rotationDir[leg]);
+        leg++;
+            //myDrive.gyroTurn(53, myDrive.RIGHT_TURN);
+        myDrive.allStop();
 
 
-            myDrive.gyroTurn(2, myDrive.LEFT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
+        myDrive.moveForward(44, 0.3);
+        while ((myDrive.motorsRunning() == true) && opModeIsActive()) {
+            myDrive.update();
+        }
+        myDrive.allStop();
+
+        myDrive.gyroTurn2(Headings[leg], rotationDir[leg]);
+        leg++;
+            //myDrive.gyroTurn(2, myDrive.LEFT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
                                                     // May be a function of battery power
-            myDrive.allStop();
+        myDrive.allStop();
 
 
             long mytime = System.currentTimeMillis();
@@ -189,8 +197,9 @@ public class KernelPanicAutonomousBlue extends LinearOpMode {
             //Turn towards center and drive to knock off ball
             //dataDump();
             //SystemClock.sleep(3000); //Give time to look at data
-
-            myDrive.gyroTurn(220, myDrive.RIGHT_TURN);  //Left turn near zero has a problem
+            myDrive.gyroTurn2(Headings[leg], rotationDir[leg]);
+            //leg++;
+            //myDrive.gyroTurn(220, myDrive.RIGHT_TURN);  //Left turn near zero has a problem
             myDrive.allStop();
             myDrive.moveForward(66, 0.3);
             while ((myDrive.motorsRunning() == true) && opModeIsActive()) {

@@ -16,11 +16,29 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 @Autonomous(name="Kernel Panic Autonomous Red", group="Kernel Panic")
 public class KernelPanicAutonomousRed extends LinearOpMode {
     KernelPanicPlatform robot = new KernelPanicPlatform();
+    // Headings are the desired Headings for that step, expressed in "true" values
+    public static int[] Headings = {
+            307, 2, 315, 0
+    };
+    public static int[] rotationDir = {
+            -1, 1, -1, 0
+    };
+    // This is a debugging and testing vector.
+    public static int[] numberSteps = {
+            0,    0,   0,   0,  0
+    };
+    // This is a debugging and testing vector.
+    public static int[] Arrival = {
+            0,    0,   0,   0,  0
+    };
 
+    public static int prevHeading = 0;
+    public static int newHeading = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         int currentHeading;
         int nextHeading;
+        int leg = 0;
         //public static final int COLOR_SENSOR_BOTTOM_ADDRESS = 0x3c>>1;
         //public ColorSensor colorBottom = null;
         boolean continueForward = true;
@@ -50,7 +68,9 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
 
 
         //myDrive.gyroTurn(307, myDrive.RIGHT_TURN);
-        myDrive.gyroTurn(307, myDrive.LEFT_TURN);
+        myDrive.gyroTurn2(Headings[leg], rotationDir[leg]);
+        leg++;
+        //myDrive.gyroTurn(Headings[0], myDrive.LEFT_TURN);
         myDrive.allStop();
 
 
@@ -61,8 +81,9 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
         }
         myDrive.allStop();
 
-
-        myDrive.gyroTurn(2, myDrive.RIGHT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
+        myDrive.gyroTurn2(Headings[leg], rotationDir[leg]);
+        leg++;
+        //myDrive.gyroTurn(Headings[1], myDrive.RIGHT_TURN);  // Seems to lose its mind and think 0 is off by 2 to 5
         // May be a function of battery power
         myDrive.allStop();
 
@@ -171,7 +192,7 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
         //dataDump();
         //SystemClock.sleep(3000); //Give time to look at data
 
-        if (robot.gyro.getHeading() >315) {
+        if (robot.gyro.getHeading() >Headings[315]) {
             //  Do nothing
         }
         else {
@@ -179,8 +200,9 @@ public class KernelPanicAutonomousRed extends LinearOpMode {
             safeSleep(200);
             myDrive.allStop();
         }
-
-        myDrive.gyroTurn(315, myDrive.LEFT_TURN);  //Left turn near zero has a problem
+        myDrive.gyroTurn2(Headings[leg], rotationDir[leg]);
+        //leg++;
+        //myDrive.gyroTurn(315, myDrive.LEFT_TURN);  //Left turn near zero has a problem
         myDrive.allStop();
 
 
