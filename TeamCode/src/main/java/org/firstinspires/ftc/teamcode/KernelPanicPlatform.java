@@ -16,12 +16,13 @@ import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import java.util.Map;
 
 /**
- * Created by judenki on 11/19/16.
+ * Created by Kernel Panic on 11/19/16.
  */
 
 public class KernelPanicPlatform {
@@ -30,6 +31,7 @@ public class KernelPanicPlatform {
     public DcMotor  rightMotorFront  = null;
     public DcMotor  leftMotorBack   = null;
     public DcMotor  rightMotorBack  = null;
+    public DcMotor  ballLiftMotor = null;
     public GyroSensor gyro = null;
 
     // For unknown reasons must convert the 8-bit address programmed by the MR tool to a
@@ -44,7 +46,9 @@ public class KernelPanicPlatform {
     //public Servo backServo = null;
     public CRServo frontServo = null;
     public CRServo backServo  = null;
-
+    public Servo   liftServoRight = null;
+    public Servo   liftServoLeft = null;
+    public TouchSensor backTouch = null;
 
 
     public final static double SERVO_EXTEND_POWER  = 254;
@@ -65,12 +69,13 @@ public class KernelPanicPlatform {
         leftMotorFront = ahwMap.dcMotor.get("left motor front");
         rightMotorBack = ahwMap.dcMotor.get("right motor back");
         leftMotorBack = ahwMap.dcMotor.get("left motor back");
+        ballLiftMotor = ahwMap.dcMotor.get("ball lift motor");
 
         //Gyro Sensor
         gyro = ahwMap.gyroSensor.get("gyro");
         gyro.calibrate();
         SystemClock.sleep(50);  // Give a breif moment so the init can start
-        while (gyro.isCalibrating()  == true) {
+        while (gyro.isCalibrating()) {
             // need to add break out
         }
 
@@ -94,23 +99,42 @@ public class KernelPanicPlatform {
         frontServo = ahwMap.crservo.get("frontServo");
         backServo = ahwMap.crservo.get("backServo");
 
+        liftServoLeft = ahwMap.servo.get("liftServoLeft");
+        liftServoRight = ahwMap.servo.get("liftServoRight");
+
         frontServo.setDirection(CRServo.Direction.FORWARD);
         backServo.setDirection(CRServo.Direction.FORWARD);
+
+        liftServoLeft.setDirection(Servo.Direction.FORWARD);
+        liftServoRight.setDirection(Servo.Direction.FORWARD);
+
         frontServo.setPower(SERVO_EXTEND_POWER);
         backServo.setPower(SERVO_EXTEND_POWER);
+        liftServoLeft.setPosition(0);
+        liftServoRight.setPosition(0);
+
+
         SystemClock.sleep(500);
+
         frontServo.setPower(SERVO_STOP_POWER);
         backServo.setPower(SERVO_STOP_POWER);
+
         frontServo.setDirection(CRServo.Direction.REVERSE);
         backServo.setDirection(CRServo.Direction.REVERSE);
+        liftServoLeft.setDirection(Servo.Direction.REVERSE);
+        liftServoRight.setDirection(Servo.Direction.REVERSE);
+
+
         frontServo.setPower(SERVO_RETRACT_POWER);
         backServo.setPower(SERVO_RETRACT_POWER);
+
         SystemClock.sleep(500);
+
         frontServo.setPower(SERVO_STOP_POWER);
         backServo.setPower(SERVO_STOP_POWER);
 
 
-
+        backTouch = ahwMap.touchSensor.get("backTouch");
 
     }
 

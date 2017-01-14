@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -93,6 +94,31 @@ public class KernelPanicDriverMode extends LinearOpMode {
             }
             else
                 robot.backServo.setPower(robot.SERVO_STOP_POWER);
+
+            if(gamepad1.right_bumper) {
+                robot.ballLiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                robot.ballLiftMotor.setPower(1);
+
+            }
+            else if(gamepad1.left_bumper) {
+                robot.ballLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                robot.ballLiftMotor.setPower(1);
+            }
+            if(gamepad1.right_trigger != 0.0) {
+                robot.liftServoLeft.setDirection(Servo.Direction.FORWARD);
+                robot.liftServoLeft.setPosition(1);
+                robot.liftServoRight.setDirection(Servo.Direction.FORWARD);
+                robot.liftServoRight.setPosition(1);
+
+
+            }
+            else if((gamepad1.right_trigger != 0.0) && (gamepad1.left_trigger != 0.0)) {
+                robot.liftServoLeft.setDirection(Servo.Direction.REVERSE);
+                robot.liftServoLeft.setPosition(0);
+                robot.liftServoRight.setDirection(Servo.Direction.REVERSE);
+                robot.liftServoRight.setPosition(0);
+
+            }
 
 
 
